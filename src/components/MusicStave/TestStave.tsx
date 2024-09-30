@@ -21,7 +21,7 @@ export function TestStave({ clef = "treble", keySignature }: MusicStaveProps) {
           divRef.current,
           Renderer.Backends.SVG
         );
-        rendererRef.current.resize(500, 250);
+        rendererRef.current.resize(575, 250);
       }
 
       const context = rendererRef.current.getContext();
@@ -30,7 +30,7 @@ export function TestStave({ clef = "treble", keySignature }: MusicStaveProps) {
       context.clear();
 
       // Create a stave of width 400 at position 10, 40 on the canvas.
-      const stave = new Stave(10, 40, 450);
+      const stave = new Stave(10, 40, 525);
 
       // Add a clef and time signature.
       stave.addClef(clef).addTimeSignature("4/4");
