@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Accidental, Renderer, StaveNote, Vex } from "vexflow";
+import { Renderer, StaveNote, Vex } from "vexflow";
 import { Key, notesByKey } from "../../data/keyInfo";
 
 interface MusicStaveProps {
@@ -63,7 +63,7 @@ export function TestStave({ clef = "treble", keySignature }: MusicStaveProps) {
 
 function createNotes(notes: string[]): StaveNote[] {
   const staveNotes = notes.map((note) => {
-    const accidental = getNoteAccidental(note);
+    // const accidental = getNoteAccidental(note);
 
     // if (accidental === "#") {
     //   return new StaveNote({
@@ -86,6 +86,6 @@ function createNotes(notes: string[]): StaveNote[] {
   return staveNotes;
 }
 
-export function getNoteAccidental(note: string): string {
-  return note.length > 1 ? note[1] : "";
-}
+// export function getNoteAccidental(note: string): string {
+//   return note.length > 1 ? note[1] : "";
+// }
