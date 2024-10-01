@@ -13,21 +13,25 @@ export const ChordGrid = ({ selectedKey }: ChordGridProps) => {
 
   const chords = chordsByKey[selectedKey];
 
-  // Split the chords into two rows
-  const topRow = chords.slice(0, 4);
-  const bottomRow = chords.slice(4);
+  // Split the chords into three rows
+  const firstRow = chords.slice(0, 3);
+  const secondRow = chords.slice(3, 6);
+  const lastChord = chords[6];
 
   return (
     <VStack spacing={4} width="100%" maxWidth="400px">
-      <SimpleGrid columns={4} spacing={4} width="100%">
-        {topRow.map((chord, index) => (
+      <SimpleGrid columns={3} spacing={2} width="80%">
+        {firstRow.map((chord, index) => (
           <ChordBox key={index} chord={chord} index={index} />
         ))}
       </SimpleGrid>
-      <SimpleGrid columns={3} spacing={4} width="100%">
-        {bottomRow.map((chord, index) => (
-          <ChordBox key={index + 4} chord={chord} index={index + 4} />
+      <SimpleGrid columns={3} spacing={2} width="80%">
+        {secondRow.map((chord, index) => (
+          <ChordBox key={index + 3} chord={chord} index={index + 3} />
         ))}
+      </SimpleGrid>
+      <SimpleGrid columns={1} spacing={2} width="25%  ">
+        <ChordBox chord={lastChord} index={6} />
       </SimpleGrid>
     </VStack>
   );

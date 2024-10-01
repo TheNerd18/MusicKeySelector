@@ -1,63 +1,89 @@
-import React, { useEffect, useRef } from "react";
-import Vex from "vexflow";
-import { notesByKey, Key } from "../../data/keyInfo";
+import React, { useEffect, useRef, useState } from "react";
+import { Renderer, Stave, Voice, Formatter, StaveNote } from "vexflow";
+import { Key, notesByKey } from "../../data/keyInfo";
 
 interface MusicStaveProps {
   clef?: "treble" | "bass" | "alto" | "tenor";
   keySignature: Key;
 }
 
-export const MusicStave: React.FC<MusicStaveProps> = ({
-  clef = "treble",
-  keySignature,
-}) => {
+export function MusicStave({ clef = "treble", keySignature }: MusicStaveProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const rendererRef = useRef<Renderer | null>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.innerHTML = "";
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const { width } = containerRef.current.getBoundingClientRect();
+        // Adjust the height calculation
+        const height = Math.max(200, Math.min(400, width * 0.5));
+        setDimensions({ width, height });
+      }
+    };
 
-      const VF = Vex.Flow;
-      const renderer = new VF.Renderer(
-        containerRef.current,
-        VF.Renderer.Backends.SVG
-      );
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
 
-      // Set a default size
-      renderer.resize(300, 120);
-      const context = renderer.getContext();
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
 
-      const stave = new VF.Stave(10, 40, 280);
+  useEffect(() => {
+    if (containerRef.current && dimensions.width > 0) {
+      if (!rendererRef.current) {
+        rendererRef.current = new Renderer(
+          containerRef.current,
+          Renderer.Backends.SVG
+        );
+      }
+      rendererRef.current.resize(dimensions.width + 125, dimensions.height);
 
-      // Add clef and key signature
+      const context = rendererRef.current.getContext();
+      context.clear();
+
+      const staveWidth = Math.max(dimensions.width + 25, 200);
+      // Adjust vertical positioning
+      const staveY = dimensions.height * 0.2;
+      const stave = new Stave(15, staveY, staveWidth);
+
       stave.addClef(clef);
       stave.addKeySignature(keySignature);
+      stave.setWidth(parent.innerWidth - 30);
 
+      console.log("WINDOW WIDTH", window.innerWidth);
+      console.log("STAVE WIDTH", stave.getWidth());
       stave.setContext(context).draw();
 
       const notes = notesByKey[keySignature];
-      const staveNotes = notes.map(
-        (note) => new VF.StaveNote({ clef, keys: [note], duration: "h" })
-      );
+      const staveNotes = createNotes(notes);
 
-      // Automatically determine if we need to add accidentals
-      // staveNotes.forEach((staveNote, index) => {
-      //   const noteName = notes[index].split("/")[0];
-      //   if (noteName.includes("#")) {
-      //     (staveNote as any).addAccidental(0, new VF.Accidental("#"));
-      //   } else if (noteName.includes("b")) {
-      //     (staveNote as any).addAccidental(0, new VF.Accidental("b"));
-      //   }
-      // });
-
-      const voice = new VF.Voice({ num_beats: 6, beat_value: 4 });
+      const voice = new Voice({ num_beats: 4, beat_value: 4 });
       voice.addTickables(staveNotes);
 
-      new VF.Formatter().joinVoices([voice]).format([voice], 250);
-
+      new Formatter().joinVoices([voice]).format([voice], staveWidth - 50);
       voice.draw(context, stave);
     }
-  }, [clef, keySignature]);
+  }, [clef, keySignature, dimensions]);
 
-  return <div ref={containerRef} />;
-};
+  return (
+    <div
+      ref={containerRef}
+      style={{ width: "100%", height: "auto", minHeight: "200px" }}
+    />
+  );
+}
+
+function createNotes(notes: string[]): StaveNote[] {
+  return notes.map((note, i) => {
+    if (i === 0 || i === 4) {
+      return new StaveNote({
+        keys: [note],
+        duration: "8",
+      }).setStyle({ fillStyle: "red", strokeStyle: "red" });
+    }
+    return new StaveNote({
+      keys: [note],
+      duration: "8",
+    });
+  });
+}

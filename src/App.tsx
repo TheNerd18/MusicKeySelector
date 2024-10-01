@@ -3,7 +3,7 @@ import { KeySelector } from "./components/KeySelector/KeySelector";
 import { useState } from "react";
 import { Key } from "./data/keyInfo";
 import { ChordGrid } from "./components/ChordGrid/ChordGrid";
-import { TestStave } from "./components/MusicStave/TestStave";
+import { MusicStave } from "./components/MusicStave/MusicStave";
 
 function App() {
   const [selectedKey, setSelectedKey] = useState<Key>("C");
@@ -19,7 +19,7 @@ function App() {
         <KeySelector selectedKey={selectedKey} onChange={onKeyChange} />
         <Text>Key is {selectedKey}</Text>
         <ChordGrid selectedKey={selectedKey} />
-        <TestStave keySignature={selectedKey} />
+        <MusicStave keySignature={selectedKey} />
       </VStack>
     </Center>
   );
