@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Renderer, Stave, Voice, Formatter, StaveNote } from "vexflow";
 import { Key, notesByKey } from "../../data/keyInfo";
 
