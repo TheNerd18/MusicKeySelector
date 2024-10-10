@@ -4,9 +4,13 @@ import { Key } from "../../data/keyInfo";
 
 interface ChordGridProps {
   selectedKey: Key;
+  handleChordSelect: (chord: string) => void;
 }
 
-export const ChordGrid = ({ selectedKey }: ChordGridProps) => {
+export const ChordGrid = ({
+  selectedKey,
+  handleChordSelect,
+}: ChordGridProps) => {
   if (!selectedKey) {
     return <Text>Please select a key to see the chord grid.</Text>;
   }
@@ -22,16 +26,30 @@ export const ChordGrid = ({ selectedKey }: ChordGridProps) => {
     <VStack spacing={4} width="100%" maxWidth="400px">
       <SimpleGrid columns={3} spacing={2} width="80%">
         {firstRow.map((chord, index) => (
-          <ChordBox key={index} chord={chord} index={index} />
+          <ChordBox
+            key={index}
+            chord={chord}
+            index={index}
+            onClick={() => handleChordSelect(chord)}
+          />
         ))}
       </SimpleGrid>
       <SimpleGrid columns={3} spacing={2} width="80%">
         {secondRow.map((chord, index) => (
-          <ChordBox key={index + 3} chord={chord} index={index + 3} />
+          <ChordBox
+            key={index + 3}
+            chord={chord}
+            index={index + 3}
+            onClick={() => handleChordSelect(chord)}
+          />
         ))}
       </SimpleGrid>
-      <SimpleGrid columns={1} spacing={2} width="25%  ">
-        <ChordBox chord={lastChord} index={6} />
+      <SimpleGrid columns={1} spacing={2} width="25%">
+        <ChordBox
+          chord={lastChord}
+          index={6}
+          onClick={() => handleChordSelect(lastChord)}
+        />
       </SimpleGrid>
     </VStack>
   );
@@ -40,9 +58,10 @@ export const ChordGrid = ({ selectedKey }: ChordGridProps) => {
 interface ChordBoxProps {
   chord: string;
   index: number;
+  onClick: () => void;
 }
 
-const ChordBox = ({ chord, index }: ChordBoxProps) => (
+const ChordBox = ({ chord, index, onClick }: ChordBoxProps) => (
   <Box
     bg="blue.500"
     color="white"
@@ -50,6 +69,9 @@ const ChordBox = ({ chord, index }: ChordBoxProps) => (
     p={2}
     textAlign="center"
     fontWeight="bold"
+    cursor="pointer"
+    onClick={onClick}
+    _hover={{ bg: "blue.600" }}
   >
     <Text>{chord}</Text>
     <Text fontSize="sm">{getRomanNumeral(index)}</Text>

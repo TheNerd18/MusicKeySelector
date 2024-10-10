@@ -7,9 +7,20 @@ import { MusicStave } from "./components/MusicStave/MusicStave";
 
 function App() {
   const [selectedKey, setSelectedKey] = useState<Key>("C");
+  const [selectedChord, setSelectedChord] = useState<string | null>(null);
 
   const onKeyChange = (key: Key) => {
     setSelectedKey(key);
+    setSelectedChord(null);
+  };
+
+  const onChordSelection = (chord: string) => {
+    if (chord) {
+      setSelectedChord(chord);
+    } else {
+      console.error(`No notes found for chord: ${chord}`);
+      setSelectedChord(null);
+    }
   };
 
   return (
@@ -18,8 +29,16 @@ function App() {
         <Heading>Music Key Selector</Heading>
         <KeySelector selectedKey={selectedKey} onChange={onKeyChange} />
         <Text>Key is {selectedKey}</Text>
-        <ChordGrid selectedKey={selectedKey} />
-        <MusicStave keySignature={selectedKey} />
+        {selectedChord ? (
+          <Text>Selected Chord is {selectedChord}</Text>
+        ) : (
+          <Text>Click on a chord to view more info</Text>
+        )}
+        <ChordGrid
+          selectedKey={selectedKey}
+          handleChordSelect={onChordSelection}
+        />
+        <MusicStave keySignature={selectedKey} chord={selectedChord} />
       </VStack>
     </Center>
   );

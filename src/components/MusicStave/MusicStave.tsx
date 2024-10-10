@@ -1,13 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { Renderer, Stave, Voice, Formatter, StaveNote } from "vexflow";
-import { Key, notesByKey } from "../../data/keyInfo";
+import { chordNotesByChord, Key, notesByKey } from "../../data/keyInfo";
+import { chordNoteMapper } from "../../helpers/chordNoteMapper";
 
 interface MusicStaveProps {
   clef?: "treble" | "bass" | "alto" | "tenor";
   keySignature: Key;
+  chord: string | null;
+  chordColor?: string;
 }
 
-export function MusicStave({ clef = "treble", keySignature }: MusicStaveProps) {
+export function MusicStave({
+  clef = "treble",
+  keySignature,
+  chord,
+  chordColor = "#FFA500",
+}: MusicStaveProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<Renderer | null>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -50,20 +58,26 @@ export function MusicStave({ clef = "treble", keySignature }: MusicStaveProps) {
       stave.addKeySignature(keySignature);
       stave.setWidth(parent.innerWidth - 30);
 
-      console.log("WINDOW WIDTH", window.innerWidth);
-      console.log("STAVE WIDTH", stave.getWidth());
       stave.setContext(context).draw();
 
       const notes = notesByKey[keySignature];
-      const staveNotes = createNotes(notes);
 
-      const voice = new Voice({ num_beats: 4, beat_value: 4 });
+      const chordNotes = chord ? chordNotesByChord[chord] : [];
+
+      const mappedChordNotes = chordNoteMapper(notes, chordNotes);
+      const staveNotes = createNotes({
+        notes,
+        chordNotes: mappedChordNotes,
+        chordColor,
+      });
+
+      const voice = new Voice({ num_beats: 10, beat_value: 4 });
       voice.addTickables(staveNotes);
 
       new Formatter().joinVoices([voice]).format([voice], staveWidth - 50);
       voice.draw(context, stave);
     }
-  }, [clef, keySignature, dimensions]);
+  }, [clef, keySignature, dimensions, chord, chordColor]);
 
   return (
     <div
@@ -73,17 +87,40 @@ export function MusicStave({ clef = "treble", keySignature }: MusicStaveProps) {
   );
 }
 
-function createNotes(notes: string[]): StaveNote[] {
-  return notes.map((note, i) => {
+interface CreateNotes {
+  notes: string[];
+  chordNotes?: string[];
+  chordColor: string;
+}
+
+function createNotes({
+  notes,
+  chordColor,
+  chordNotes,
+}: CreateNotes): StaveNote[] {
+  const staveNotes: StaveNote[] = [];
+
+  const mappedNotes = notes.map((note, i) => {
+    if (chordNotes?.includes(note)) {
+      return new StaveNote({
+        keys: [note],
+        duration: "4",
+      }).setStyle({ fillStyle: chordColor, strokeStyle: chordColor });
+    }
+
     if (i === 0 || i === 4) {
       return new StaveNote({
         keys: [note],
-        duration: "8",
+        duration: "4",
       }).setStyle({ fillStyle: "red", strokeStyle: "red" });
     }
     return new StaveNote({
       keys: [note],
-      duration: "8",
+      duration: "4",
     });
   });
+
+  staveNotes.push(...mappedNotes);
+
+  return staveNotes;
 }
