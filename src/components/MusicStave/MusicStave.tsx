@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Renderer, Stave, Voice, Formatter, StaveNote } from "vexflow";
 import { chordNotesByChord, Key, notesByKey } from "../../data/keyInfo";
 import { chordNoteMapper } from "../../helpers/chordNoteMapper";
@@ -18,45 +18,30 @@ export function MusicStave({
 }: MusicStaveProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<Renderer | null>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        const { width } = containerRef.current.getBoundingClientRect();
-        // Adjust the height calculation
-        const height = Math.max(200, Math.min(400, width * 0.5));
-        setDimensions({ width, height });
-      }
-    };
+    if (containerRef.current) {
+      const width = window.outerWidth - 30; // Use current window width
+      const height = Math.max(200, Math.min(400, width * 0.5));
 
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
-
-  useEffect(() => {
-    if (containerRef.current && dimensions.width > 0) {
       if (!rendererRef.current) {
         rendererRef.current = new Renderer(
           containerRef.current,
           Renderer.Backends.SVG
         );
       }
-      rendererRef.current.resize(dimensions.width + 125, dimensions.height);
+      rendererRef.current.resize(width + 1, height);
 
       const context = rendererRef.current.getContext();
       context.clear();
 
-      const staveWidth = Math.max(dimensions.width + 25, 200);
-      // Adjust vertical positioning
-      const staveY = dimensions.height * 0.2;
-      const stave = new Stave(15, staveY, staveWidth);
+      const staveWidth = width - 80;
+      const staveY = height * 0.2;
+      const stave = new Stave(0, staveY, staveWidth);
 
       stave.addClef(clef);
       stave.addKeySignature(keySignature);
-      stave.setWidth(parent.innerWidth - 30);
+      stave.setWidth(width);
 
       stave.setContext(context).draw();
 
@@ -77,7 +62,7 @@ export function MusicStave({
       new Formatter().joinVoices([voice]).format([voice], staveWidth - 50);
       voice.draw(context, stave);
     }
-  }, [clef, keySignature, dimensions, chord, chordColor]);
+  }, [clef, keySignature, chord, chordColor]);
 
   return (
     <div
