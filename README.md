@@ -1,50 +1,113 @@
-# React + TypeScript + Vite
+# Music Chord Selector
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A interactive web application for exploring musical keys, chords, and their relationships. Built with React, TypeScript, and VexFlow for musical notation.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Key Selection**: Choose from 14 different musical keys (major keys)
+- **Chord Grid**: Interactive display of all 7 chords in each key with Roman numeral notation
+- **Musical Staff**: Visual representation of chords on a musical staff with:
+  - Proper key signatures
+  - Scale notes with highlighted chord tones
+  - Color-coded tonic and dominant chords
+- **Responsive Design**: Works on desktop and mobile devices
+- **Real-time Updates**: All components sync automatically when changing keys or selecting chords
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Prerequisites
 
-- Configure the top-level `parserOptions` property like this:
+- **Node.js** (version 16 or higher)
+- **npm** or **yarn** package manager
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Setup
+
+1. **Clone the repository**:
+
+   ```bash
+   git clone https://github.com/yourusername/music-chord-selector.git
+   cd music-chord-selector
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**:
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser** and navigate to `http://localhost:5173`
+
+### Build for Production
+
+```bash
+npm run build
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+The built files will be in the `dist` directory.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Usage
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+1. **Select a Key**: Use the dropdown menu to choose your desired musical key
+2. **Explore Chords**: Click on any chord in the grid to see it highlighted on the musical staff
+3. **View Notation**: The musical staff shows:
+   - The complete scale for the selected key
+   - Highlighted notes that belong to the selected chord
+   - Red notes indicating the tonic (I) and dominant (V) degrees
+   - Orange notes for the selected chord
+
+## Technology Stack
+
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **Chakra UI** - Component library
+- **VexFlow** - Musical notation rendering
+- **Framer Motion** - Animations
+
+## Project Structure
+
 ```
+src/
+├── components/           # React components
+│   ├── ChordGrid/       # Interactive chord grid
+│   ├── KeySelector/     # Key selection dropdown
+│   └── MusicStave/      # Musical staff notation
+├── data/
+│   └── keyInfo.ts       # Musical key and chord data
+├── helpers/
+│   └── chordNoteMapper.ts # Chord-to-note mapping utility
+└── App.tsx              # Main application component
+```
+
+## Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Make your changes and commit: `git commit -am 'Add feature'`
+4. Push to the branch: `git push origin feature-name`
+5. Submit a pull request
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## Acknowledgments
+
+- [VexFlow](https://github.com/0xfe/vexflow) for music notation rendering
+- [Chakra UI](https://chakra-ui.com/) for the component library
+- Musical theory resources and chord progression references
