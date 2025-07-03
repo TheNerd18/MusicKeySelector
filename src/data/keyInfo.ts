@@ -13,6 +13,11 @@ export const keys = [
   "F#",
   "G",
   "Gb",
+  "Gong",
+  "Shang",
+  "Jue",
+  "Zhi",
+  "Yu",
 ];
 
 export type Key = (typeof keys)[number];
@@ -32,6 +37,11 @@ export const chordsByKey: Record<Key, string[]> = {
   "F#": ["F♯", "G♯m", "A♯m", "B", "C♯", "D♯m", "E♯°"],
   G: ["G", "Am", "Bm", "C", "D", "Em", "F♯°"],
   Gb: ["G♭", "A♭m", "B♭m", "C♭", "D♭", "E♭m", "F°"],
+  Gong: ["C", "D", "E", "G", "A"], // Pentatonic scale starting on C (宫)
+  Shang: ["D", "E", "G", "A", "C"], // Pentatonic scale starting on D (商)
+  Jue: ["E", "G", "A", "C", "D"], // Pentatonic scale starting on E (角)
+  Zhi: ["G", "A", "C", "D", "E"], // Pentatonic scale starting on G (徵)
+  Yu: ["A", "C", "D", "E", "G"], // Pentatonic scale starting on A (羽)
 };
 
 export const notesByKey: Record<Key, string[]> = {
@@ -137,6 +147,11 @@ export const notesByKey: Record<Key, string[]> = {
     "d#/5",
   ],
   Bb: ["bb/3", "c/4", "d/4", "eb/4", "f/4", "g/4", "a/4", "bb/4", "c/5", "d/5"],
+  Gong: ["c/4", "d/4", "e/4", "g/4", "a/4", "c/5", "d/5", "e/5", "g/5", "a/5"], // Pentatonic C-D-E-G-A
+  Shang: ["d/4", "e/4", "g/4", "a/4", "c/5", "d/5", "e/5", "g/5", "a/5", "c/6"], // Pentatonic D-E-G-A-C
+  Jue: ["e/4", "g/4", "a/4", "c/5", "d/5", "e/5", "g/5", "a/5", "c/6", "d/6"], // Pentatonic E-G-A-C-D
+  Zhi: ["g/4", "a/4", "c/5", "d/5", "e/5", "g/5", "a/5", "c/6", "d/6", "e/6"], // Pentatonic G-A-C-D-E
+  Yu: ["a/4", "c/5", "d/5", "e/5", "g/5", "a/5", "c/6", "d/6", "e/6", "g/6"], // Pentatonic A-C-D-E-G
 };
 
 export const chordNotesByChord: Record<string, string[]> = {
