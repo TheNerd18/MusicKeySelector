@@ -10,6 +10,19 @@ interface MusicStaveProps {
   chordColor?: string;
 }
 
+// Map Chinese pentatonic modes to their equivalent Western key signatures for VexFlow
+function getVexFlowKeySignature(key: Key): string {
+  const chineseModeMapping: Record<string, string> = {
+    Gong: "C",    // 宫 - based on C pentatonic
+    Shang: "C",   // 商 - same pentatonic scale, different emphasis  
+    Jue: "C",     // 角 - same pentatonic scale, different emphasis
+    Zhi: "C",     // 徵 - same pentatonic scale, different emphasis
+    Yu: "C",      // 羽 - same pentatonic scale, different emphasis
+  };
+  
+  return chineseModeMapping[key] || key;
+}
+
 export function MusicStave({
   clef = "treble",
   keySignature,
@@ -40,7 +53,7 @@ export function MusicStave({
       const stave = new Stave(0, staveY, staveWidth);
 
       stave.addClef(clef);
-      stave.addKeySignature(keySignature);
+      stave.addKeySignature(getVexFlowKeySignature(keySignature));
       stave.setWidth(width);
 
       stave.setContext(context).draw();
